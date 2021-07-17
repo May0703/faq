@@ -26,23 +26,25 @@ WSL 自带的终端比较难用，我们推荐从 Microsoft Store 安装 [Window
 
 需要在 Windows 上安装 [vcXsrv](https://sourceforge.net/projects/vcxsrv/files/) ，然后运行 `XLaunch` ，然后应该可以在右下角的状态栏中找到它。
 
+**注意**, 在启动 XLaunch 的时候需要勾选 "Disable access control"。
+
 接着，在 WSL 里面配置 `DISPLAY` 环境变量。如果是临时使用：
 
 ```bash
-> export DISPLAY=:0
+> export DISPLAY=$(ip r | grep default | awk '{ print $3 }'):0
 ```
 
 这样做的话，每次在用之前都需要重新运行这条命令。如果想一劳永逸，那么，运行下面的命令一次：
 
 ```bash
-> echo 'export DISPLAY=:0' >> ~/.bashrc
+> echo "export DISPLAY=\$(ip r | grep default | awk '{ print \$3 }'):0" >> ~/.bashrc
 ```
 
-它会往 `~/.bashrc` 文件中追加一个命令，而 `bash` 在每次启动的时候都会执行 `~/.bashrc` 里面的每条指令。完成后，重新开一个命令行窗口，如果出现下面的效果：
+它会往 `~/.bashrc` 文件中追加一个命令，而 `bash` 在每次启动的时候都会执行 `~/.bashrc` 里面的每条指令。完成后，重新开一个命令行窗口，如果出现**类似**下面的效果(IP 可能不同)：
 
 ```bash
 $ echo $DISPLAY
-:0
+172.22.192.1:0
 ```
 
 那么，设置就成功了。注意，这样设置只对新开的窗口有效果。
